@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/users';
 import { convertDurationToNumbers } from 'duratii';
-import { APIGuard } from 'guards/api.guard';
+import { APIGuard } from './../../guards/api.guard';
 
 @Controller('auth')
 export class AuthController {
