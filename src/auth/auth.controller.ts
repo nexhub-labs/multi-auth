@@ -1,5 +1,5 @@
 // AuthController.ts
-import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, HttpException, Res } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, HttpException, Res, Get } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/users';
@@ -9,6 +9,11 @@ import { APIGuard } from './../../guards/api.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) { }
+
+  @Get()
+  async getHello() {
+    return "Hello World";
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
