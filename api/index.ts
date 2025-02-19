@@ -3,7 +3,7 @@ import { VercelApiHandler as Handler } from '@vercel/node';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
 import { ConfigService } from '@nestjs/config';
-import { setupCors } from 'cors/cors';
+import { setupCors } from './../cors/cors';
 
 let cachedServer: any = null;
 
