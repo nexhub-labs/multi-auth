@@ -1,7 +1,7 @@
 // cors.config.ts
 export const corsConfig = {
     development: {
-        origin: [process.env.KEYVAULT_WEB_DEV_URL, 'http://localhost:5174'],
+        origin: [process.env.KEYVAULT_WEB_DEV_URL],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: [
             'Origin',
