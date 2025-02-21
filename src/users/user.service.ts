@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { SocialAuth, User } from '@prisma/client';
 import { RegisterDto, UserWithoutPassword } from '../dto/users';
-import { PrismaService } from 'shared/prisma.service';
+import { PrismaService } from '../../shared/prisma.service';
 
 @Injectable()
 export class UserService {
