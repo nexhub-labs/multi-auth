@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
 import { ConfigService } from '@nestjs/config';
 import { setupCors } from './../cors/cors';
+import cookieParser from 'cookie-parser';
 
 let cachedServer: any = null;
 
@@ -13,6 +14,7 @@ async function bootstrapServer() {
     const app = await NestFactory.create(AppModule, { bodyParser: false });
     const configService = app.get(ConfigService);
     setupCors(app, configService); // Apply your CORS configuration
+    app.use(cookieParser());
     await app.init();
     cachedServer = app.getHttpAdapter().getInstance();
   }

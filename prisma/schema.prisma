@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -14,11 +14,14 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(cuid()) @map("_id")
-  email       String?      @unique
-  password    String?
-  name        String?
-  socialAuths SocialAuth[]
+  id                  String               @id @default(cuid()) @map("_id")
+  email               String?              @unique
+  password            String?
+  name                String?
+  socialAuths         SocialAuth[]
+  sessions            Session[]
+  verificationTokens  VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
 
   emailVerified DateTime?
   createdAt     DateTime  @default(now())
@@ -26,12 +29,58 @@ model User {
 }
 
 model SocialAuth {
-  id         String @id @default(cuid()) @map("_id")
+  id         String   @id @default(cuid()) @map("_id")
   provider   String
   providerId String
   userId     String
-  user       User   @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
+  // Ensure a user cannot register the same social account twice.
+  @@unique([provider, providerId])
+}
+
+model Session {
+  id         String   @id @default(cuid()) @map("_id")
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  token      String   @unique
+  ipAddress  String? // Optional: store the user's IP address.
+  userAgent  String? // Optional: store the user agent string.
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime // Expiration date for the session.
+  lastAccess DateTime @default(now())
+  // Note: Create a TTL index on `expiresAt` directly in MongoDB to auto-remove expired sessions.
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid()) @map("_id")
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  // Note: Set up a TTL index on `expiresAt` manually in MongoDB to automatically clear expired verification tokens.
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid()) @map("_id")
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Note: Similarly, create a TTL index on `expiresAt` in MongoDB for automatic cleanup.
+
+  @@index([userId])
+  @@index([expiresAt])
 }
